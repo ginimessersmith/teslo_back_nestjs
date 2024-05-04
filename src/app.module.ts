@@ -8,6 +8,8 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { MessagesWebSocketModule } from './messages-web-socket/messages-web-socket.module';
+
 
 @Module({
   imports: [
@@ -20,18 +22,22 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
-      synchronize: true,//? no usar en prod.
-      // ssl:true
+      synchronize: true,//? no usar en prod.,, codigo para el despliegue:
+      // ssl:process.env.STAGE === 'prod',
+      // extra: {
+      //   ssl: process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null
+      // },
     }),
     ServeStaticModule.forRoot({
       //servir la carpeta estatica public
-      rootPath:join(__dirname,'..','public')
+      rootPath: join(__dirname, '..', 'public')
     }),
     ProductsModule,
     CommonModule,
     SeedModule,
     FilesModule,
     AuthModule,
+    MessagesWebSocketModule,
   ],
 
 })
